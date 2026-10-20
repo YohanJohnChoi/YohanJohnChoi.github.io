@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yohan Choi Resume</title>
+<meta name="description" content="Yohan Choi — Hardware Engineer, automotive dashcam circuit design, EMC and reliability.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: a component datasheet — header block with revision, key-parameter table, then expandable sections in one 880px column */
+:root {
+  --paper: #F6F7F9;
+  --surface: #FFFFFF;
+  --ink: #141820;
+  --muted: #586172;
+  --rule: #D3D9E2;
+  --accent: #1E4DB0;
+  --accent-soft: #E5EBF7;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1217; --surface: #151A22; --ink: #E5E8EE; --muted: #9AA3B3;
+    --rule: #2A313D; --accent: #82A5F2; --accent-soft: #1A2441; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1217; --surface: #151A22; --ink: #E5E8EE; --muted: #9AA3B3;
+  --rule: #2A313D; --accent: #82A5F2; --accent-soft: #1A2441; color-scheme: dark;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper);
+}
+#app[data-lang="ko"] [data-l="en"], #app[data-lang="en"] [data-l="ko"] { display: none; }
+
+.wrap {
+  max-width: 880px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Sticky nav */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+.nav .wrap { display: flex; align-items: center; gap: 4px 18px; flex-wrap: wrap; padding-block: 10px; }
+.nav a {
+  color: var(--muted); text-decoration: none;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
+}
+.nav a:hover, .nav a:focus-visible { color: var(--accent); }
+.lang { margin-left: auto; display: flex; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+.lang button {
+  font: 500 12px var(--font-mono); padding: 4px 10px; border: 0; cursor: pointer;
+  background: transparent; color: var(--muted);
+}
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--paper); }
+button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Datasheet header */
+header.sheet { padding-block: 40px 28px; display: grid; gap: 18px; }
+.docline {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+  border-top: 3px solid var(--ink); border-bottom: 1px solid var(--ink); padding-block: 6px;
+}
+h1 { margin: 0; font-size: clamp(30px, 6vw, 44px); line-height: 1.15; letter-spacing: -.01em; text-wrap: balance; }
+h1 small { display: block; font-size: 16px; font-weight: 500; color: var(--accent); letter-spacing: 0; margin-top: 6px; }
+.lede { margin: 0; max-width: 65ch; color: var(--ink); }
+
+section { padding-block: 26px; border-top: 1px solid var(--rule); scroll-margin-top: 56px; }
+h2 {
+  margin: 0 0 14px; font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+}
+
+/* Key parameters table */
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 14px; }
+th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+td.val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 500; white-space: nowrap; }
+td.cond { color: var(--muted); }
+
+/* Feature list */
+ul.features { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; max-width: 70ch; }
+
+/* Projects */
+.projects { display: grid; gap: 10px; }
+details { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; }
+details[open] { border-color: var(--accent); }
+summary {
+  list-style: none; cursor: pointer; padding: 14px 16px;
+  display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; align-items: baseline;
+}
+summary::-webkit-details-marker { display: none; }
+.p-name { font-weight: 700; font-size: 16px; min-width: 0; }
+.p-name::before {
+  content: "+"; display: inline-block; width: 1.1em; font-family: var(--font-mono);
+  color: var(--accent); transition: transform .15s;
+}
+details[open] .p-name::before { content: "\2212"; }
+.p-period { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.p-one { grid-column: 1 / -1; color: var(--muted); font-size: 14px; padding-left: 1.1em; min-width: 0; }
+.chip {
+  display: inline-block; margin-left: 6px; padding: 0 7px; border-radius: 3px;
+  background: var(--accent-soft); color: var(--accent);
+  font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; white-space: nowrap;
+}
+.p-body { padding: 0 16px 16px calc(16px + 1.1em); }
+.p-body ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; max-width: 70ch; }
+.p-body b { font-weight: 700; }
+
+/* Education / service rows */
+.rows { display: grid; gap: 14px; }
+.row { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; }
+.row .t { font-weight: 700; min-width: 0; }
+.row .d { font-family: var(--font-mono); font-size: 12px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.row .s { grid-column: 1 / -1; color: var(--muted); font-size: 14px; }
+
+/* Skills */
+.skills { display: grid; gap: 12px; }
+.skill-group { display: grid; grid-template-columns: 9.5em 1fr; gap: 4px 16px; }
+.skill-group h3 { margin: 0; font-size: 14px; font-weight: 700; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.tag {
+  font-family: var(--font-mono); font-size: 12px; padding: 1px 8px;
+  border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); background: var(--surface);
+}
+
+/* Contact */
+.contact { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.email { font-family: var(--font-mono); font-size: 15px; user-select: all; }
+.copy {
+  font: 500 12px var(--font-mono); padding: 5px 12px; border-radius: 4px; cursor: pointer;
+  border: 1px solid var(--accent); background: transparent; color: var(--accent);
+}
+.copy:hover { background: var(--accent-soft); }
+.downloads { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+a.copy { display: inline-block; text-decoration: none; }
+.note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+
+footer { padding-block: 24px 40px; border-top: 3px solid var(--ink); font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+@media (max-width: 560px) {
+  .skill-group { grid-template-columns: 1fr; }
+  summary { grid-template-columns: 1fr; }
+  .p-period { padding-left: 1.1em; }
+  .p-body { padding-left: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<div id="app" data-lang="ko">
+
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a href="#summary"><span data-l="ko">요약</span><span data-l="en">Summary</span></a>
+    <a href="#projects"><span data-l="ko">프로젝트</span><span data-l="en">Projects</span></a>
+    <a href="#education"><span data-l="ko">학력</span><span data-l="en">Education</span></a>
+    <a href="#skills"><span data-l="ko">스킬</span><span data-l="en">Skills</span></a>
+    <a href="#contact"><span data-l="ko">연락</span><span data-l="en">Contact</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="btn-ko" data-set="ko" aria-pressed="true">KO</button>
+      <button type="button" id="btn-en" data-set="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <header class="sheet">
+    <div class="docline">
+      <span>HW ENGINEER · AUTOMOTIVE DASHCAM</span>
+      <span>Rev. 2026.10 · Seoul, KR</span>
+    </div>
+    <h1>
+      <span data-l="ko">최요한</span><span data-l="en">Yohan Choi</span>
+      <small data-l="ko">차량용 블랙박스 HW 개발자 · 회로설계 · EMC/신뢰성 검증</small>
+      <small data-l="en">Hardware Engineer · Circuit Design · EMC &amp; Reliability</small>
+    </h1>
+    <p class="lede" data-l="ko">4년간 차량용 블랙박스의 회로설계부터 EMC/신뢰성 검증, DFM, 양산, 필드 이슈 대응까지 제품 개발 전 과정을 수행했습니다. 신규 SoC 적용 제품의 전원부를 설계하고 발열 문제를 해결해 양산까지 이끌었으며, AI를 HW 실무에 접목하고 있습니다.</p>
+    <p class="lede" data-l="en">Four years taking automotive dashcams from schematic through EMC and reliability validation, DFM, and mass production to field support. Designed power circuits for a new SoC platform, solved its thermal issue on the way to production, and now apply AI tools to hardware work.</p>
+    <div class="downloads">
+      <a class="copy" href="Yohan_Choi_Resume_KO.pdf" download>
+        <span data-l="ko">↓ 이력서 PDF (국문)</span><span data-l="en">↓ Résumé PDF (Korean)</span>
+      </a>
+      <a class="copy" href="Yohan_Choi_Resume_EN.pdf" download>
+        <span data-l="ko">↓ 이력서 PDF (영문)</span><span data-l="en">↓ Résumé PDF (English)</span>
+      </a>
+    </div>
+  </header>
+
+  <section id="summary">
+    <h2><span data-l="ko">주요 수치</span><span data-l="en">Key Parameters</span></h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th><span data-l="ko">항목</span><span data-l="en">Parameter</span></th>
+            <th><span data-l="ko">값</span><span data-l="en">Value</span></th>
+            <th><span data-l="ko">조건</span><span data-l="en">Conditions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span data-l="ko">HW 개발 경력</span><span data-l="en">HW development experience</span></td>
+            <td class="val">4+ yr</td>
+            <td class="cond"><span data-l="ko">2022.05 – 현재, 엠티오메가</span><span data-l="en">May 2022 – present, EMTOMEGA</span></td>
+          </tr>
+          <tr>
+            <td><span data-l="ko">누적 판매 (참여 시리즈)</span><span data-l="en">Units sold (series contributed to)</span></td>
+            <td class="val">1,000,000+</td>
+            <td class="cond"><span data-l="ko">2채널 블랙박스 시리즈, PB 모델 포함</span><span data-l="en">2-channel dashcam series, incl. private-brand</span></td>
+          </tr>
+          <tr>
+            <td><span data-l="ko">신규 SoC 플랫폼 양산</span><span data-l="en">New-SoC platform production</span></td>
+            <td class="val">15,000+</td>
+            <td class="cond"><span data-l="ko">TRINITY, 2026.09 기준</span><span data-l="en">TRINITY, as of Sep. 2026</span></td>
+          </tr>
+          <tr>
+            <td><span data-l="ko">EMC 시험 기준</span><span data-l="en">EMC test standard</span></td>
+            <td class="val">CISPR 25 Cl.5</td>
+            <td class="cond"><span data-l="ko">RE/CE 시험 직접 수행</span><span data-l="en">RE/CE, tests run in person</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span data-l="ko">핵심 역량</span><span data-l="en">Features</span></h2>
+    <ul class="features" data-l="ko">
+      <li>회로설계(OrCAD)와 PCB 설계(PADS)부터 양산, 필드 이슈 대응까지 전 과정 수행</li>
+      <li>신규 SoC(i.Catch CR5) 전원부·인터페이스 신규 설계 및 발열 문제 해결</li>
+      <li>CISPR 25 Class 5 Fail 원인을 회로·레이아웃 단위로 규명하고 대책 반영</li>
+      <li>Claude Code로 HW 업무 자동화 툴을 만들어 사내 배포</li>
+    </ul>
+    <ul class="features" data-l="en">
+      <li>End-to-end hardware: schematics (OrCAD) and PCB (PADS) through mass production and field support</li>
+      <li>New power and interface design for an i.Catch CR5 SoC, including a thermal fix</li>
+      <li>Root-caused CISPR 25 Class 5 failures to parts and layout, then fixed them</li>
+      <li>Built and deployed in-house hardware automation tools with Claude Code</li>
+    </ul>
+  </section>
+
+  <section id="projects">
+    <h2><span data-l="ko">프로젝트 — 눌러서 펼치기</span><span data-l="en">Projects — tap to expand</span></h2>
+    <div class="projects">
+
+      <details id="trinity">
+        <summary>
+          <span class="p-name">TRINITY<span class="chip">15K+</span></span>
+          <span class="p-period">2024.10 – 2025.09</span>
+          <span class="p-one" data-l="ko">자사 브랜드 QHD+FHD+FHD 3채널 블랙박스 (양산명 Pro5, NP5000) · 신규 SoC 적용</span>
+          <span class="p-one" data-l="en">In-house 3-channel QHD+FHD+FHD dashcam (sold as Pro5, NP5000) · new SoC platform</span>
+        </summary>
+        <div class="p-body">
+          <ul data-l="ko">
+            <li>사내 최초로 i.Catch 고성능 SoC(CR5)를 적용, 전원부·인터페이스 등 회로 신규 설계 (PCB Layout은 설계 리뷰로 참여)</li>
+            <li>신규 SoC의 SW Bring-up에 지속 협업, WiFi/BLE 스마트폰 연동 기능 검증</li>
+            <li><b>발열 해결:</b> DC-DC 컨버터별 발열을 계산·실측해 발열이 큰 구간의 LDO를 Buck Converter로 변경, 사내 미적용 자재였던 그라파이트 시트를 검증 후 써멀패드·히트싱크와 함께 도입</li>
+            <li>기구 부서와 패시브 쿨링을 위한 기구 형상 및 방열 자재 위치 공동 설계</li>
+            <li>신뢰성 시험, DFM 대응, KC 인증을 거쳐 15K대 이상 양산</li>
+          </ul>
+          <ul data-l="en">
+            <li>Designed new power and interface circuits for the company's first i.Catch CR5 SoC (PCB layout by a colleague, with my design review)</li>
+            <li>Supported SoC software bring-up and verified Wi-Fi/BLE smartphone pairing</li>
+            <li><b>Thermal fix:</b> calculated and measured DC-DC and LDO losses, replaced high-loss LDOs with buck converters, and introduced graphite sheets (new to the company) with thermal pads and heatsinks</li>
+            <li>Co-designed enclosure shape and heat-spreader placement with the mechanical team for passive cooling</li>
+            <li>Carried the product through reliability testing, DFM, and KC certification to 15K+ units</li>
+          </ul>
+        </div>
+      </details>
+
+      <details id="oem">
+        <summary>
+          <span class="p-name"><span data-l="ko">완성차 Maker Option 블랙박스</span><span data-l="en">OEM Maker-Option Dashcam</span><span class="chip">10K/yr</span></span>
+          <span class="p-period">2025.03 – 2026.09</span>
+          <span class="p-one" data-l="ko">일본 완성차 OEM향 · 전방 QHD / 후방 FHD · 전·후방 무선 연동</span>
+          <span class="p-one" data-l="en">For a Japanese automaker · front QHD / rear FHD · wireless front–rear link</span>
+        </summary>
+        <div class="p-body">
+          <ul data-l="ko">
+            <li>회로 신규 설계: 전·후방 기기 간 무선 연동 및 시간 동기화, Sleep 모드에서도 통신하도록 Standalone BLE 모듈 채용</li>
+            <li>기기당 MCU 2개가 실장되는 구조에 대한 별도 검증</li>
+            <li>메인 기기–카메라 모듈 간 G-sensor·GPS·온도 ADC 신호용 EMC 대응 하네스 제작</li>
+            <li>완성차 기준 신뢰성 시험(EMC 등) 진행 및 개선, 연 10K대 목표로 양산 중</li>
+          </ul>
+          <ul data-l="en">
+            <li>Designed new circuits for a wireless front/rear system with time sync, using a standalone BLE module so the units keep talking in sleep mode</li>
+            <li>Verified the dual-MCU-per-unit architecture</li>
+            <li>Built a dedicated harness for G-sensor, GPS, and temperature ADC signals between the main unit and camera module to pass EMC</li>
+            <li>Ran automaker-standard reliability and EMC testing; in mass production with a 10K units/year target</li>
+          </ul>
+        </div>
+      </details>
+
+      <details id="series">
+        <summary>
+          <span class="p-name"><span data-l="ko">2채널 블랙박스 시리즈</span><span data-l="en">2-Channel Dashcam Series</span><span class="chip">1M+</span></span>
+          <span class="p-period"><span data-l="ko">2022.05 – 현재</span><span data-l="en">2022.05 – present</span></span>
+          <span class="p-one" data-l="ko">일본 애프터마켓 브랜드향 FHD+FHD · 기준 모델과 파생 모델 4종</span>
+          <span class="p-one" data-l="en">FHD+FHD for a Japanese aftermarket brand · base model and derivatives</span>
+        </summary>
+        <div class="p-body">
+          <ul data-l="ko">
+            <li><b>기준 모델 / 완성차 PB 모델:</b> PB 모델 신뢰성 시험 담당으로 합류, 이후 필드 이슈 대응</li>
+            <li><b>파생 모델 1:</b> GPS IC·NAND Flash·Back-Light Driver IC 변경에 따른 주변회로 설계 변경 및 검증, EMC·신뢰성 시험, DFM 대응</li>
+            <li><b>파생 모델 2:</b> MCU·Audio CODEC·Image Sensor 변경과 추가 소형화에 따른 회로·PCB 설계 변경, 시나리오 전면 재검증</li>
+            <li><b>파생 모델 3 (진행 중):</b> Image Sensor 수급 이슈로 인한 센서 변경 대응, 2027.01 양산 목표</li>
+            <li><b>EMC:</b> CISPR 25 Class 5 RE/CE 시험 직접 수행, Fail 시 노이즈원을 규명하고 실드캔·필터 적용으로 기준 충족</li>
+          </ul>
+          <ul data-l="en">
+            <li><b>Base / private-brand model:</b> joined for reliability testing of the automaker private-brand model, then handled field issues</li>
+            <li><b>Derivative 1:</b> redesigned and verified peripheral circuits for new GPS, NAND flash, and backlight driver ICs; EMC, reliability, and DFM</li>
+            <li><b>Derivative 2:</b> circuit and PCB changes for a new MCU, audio codec, and image sensor plus further miniaturization; full scenario re-verification</li>
+            <li><b>Derivative 3 (in progress):</b> image sensor change driven by a supply shortage, targeting SOP in Jan. 2027</li>
+            <li><b>EMC:</b> ran CISPR 25 Class 5 RE/CE tests, traced failures to noise sources, and fixed them with shield cans and filtering</li>
+          </ul>
+        </div>
+      </details>
+
+      <details id="ai">
+        <summary>
+          <span class="p-name"><span data-l="ko">AI 활용</span><span data-l="en">AI in Hardware Work</span></span>
+          <span class="p-period">Claude Code · Codex</span>
+          <span class="p-one" data-l="ko">HW 업무 자동화 툴 사내 배포 · KiCad/FreeCAD AI 연동 실험</span>
+          <span class="p-one" data-l="en">In-house automation tools · KiCad/FreeCAD AI integration experiments</span>
+        </summary>
+        <div class="p-body">
+          <ul data-l="ko">
+            <li>Claude Code로 HW 반복 업무 자동화 툴을 직접 구현해 사내 배포</li>
+            <li>CISPR 25 원인 분석에 AI 접목</li>
+            <li>개인 프로젝트: KiCad·FreeCAD를 AI와 연동해 회로/기구 설계 보조 실험</li>
+          </ul>
+          <ul data-l="en">
+            <li>Built and deployed in-house tools with Claude Code to automate repetitive hardware tasks</li>
+            <li>Applied AI to CISPR 25 root-cause analysis</li>
+            <li>Personal project: connecting KiCad and FreeCAD to an AI agent for AI-assisted circuit and mechanical design</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <section id="education">
+    <h2><span data-l="ko">학력 · 병역</span><span data-l="en">Education · Service</span></h2>
+    <div class="rows">
+      <div class="row">
+        <span class="t">University of Minnesota, Twin Cities</span>
+        <span class="d">2018.09 – 2021.12</span>
+        <span class="s" data-l="ko">전자공학 학사 (Bachelor of Electrical Engineering) · 편입 · 학점 3.66/4.0 · Dean's List 2회</span>
+        <span class="s" data-l="en">Bachelor of Electrical Engineering · transfer · GPA 3.66/4.00 · Dean's List (2 terms)</span>
+      </div>
+      <div class="row">
+        <span class="t">Minneapolis Community and Technical College</span>
+        <span class="d">2017.01 – 2018.05</span>
+        <span class="s" data-l="ko">수학 · UMN 편입</span>
+        <span class="s" data-l="en">Coursework in Mathematics · transferred to UMN</span>
+      </div>
+      <div class="row">
+        <span class="t"><span data-l="ko">경희대학교 국제캠퍼스</span><span data-l="en">Kyung Hee University</span></span>
+        <span class="d">2013.03 – 2013.12</span>
+        <span class="s" data-l="ko">전자정보대학 전자전파공학과 · 편입 전</span>
+        <span class="s" data-l="en">Coursework in Electronics and Radio Engineering</span>
+      </div>
+      <div class="row">
+        <span class="t"><span data-l="ko">해병대</span><span data-l="en">Republic of Korea Marine Corps</span></span>
+        <span class="d">2014.06 – 2016.03</span>
+        <span class="s" data-l="ko">통신 · 병장 만기전역</span>
+        <span class="s" data-l="en">Sergeant, Communications · Honorable Discharge</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2><span data-l="ko">스킬</span><span data-l="en">Skills</span></h2>
+    <div class="skills">
+      <div class="skill-group">
+        <h3><span data-l="ko">HW 설계</span><span data-l="en">Hardware Design</span></h3>
+        <div class="tags">
+          <span class="tag" data-l="ko">회로·PCB 설계</span><span class="tag" data-l="en">Schematic &amp; PCB Design</span>
+          <span class="tag" data-l="ko">소형기기 전원 설계</span><span class="tag" data-l="en">Power Design for Compact Devices</span>
+          <span class="tag">SoC/MCU Bring-up</span>
+          <span class="tag" data-l="ko">WiFi/BLE 모듈 적용</span><span class="tag" data-l="en">Wi-Fi/BLE Module Integration</span>
+          <span class="tag" data-l="ko">방열 설계</span><span class="tag" data-l="en">Thermal Design</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3><span data-l="ko">EMC · 신뢰성</span><span data-l="en">EMC &amp; Reliability</span></h3>
+        <div class="tags">
+          <span class="tag">CISPR 25 (RE/CE)</span><span class="tag">ESD</span>
+          <span class="tag" data-l="ko">JASO 환경 시험</span><span class="tag" data-l="en">JASO Environmental</span>
+          <span class="tag" data-l="ko">KC 인증</span><span class="tag" data-l="en">KC Certification</span>
+          <span class="tag">DFM</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3><span data-l="ko">도구 · AI</span><span data-l="en">Tools &amp; AI</span></h3>
+        <div class="tags">
+          <span class="tag">OrCAD Capture</span><span class="tag">PADS Layout</span><span class="tag">KiCad</span><span class="tag">FreeCAD</span>
+          <span class="tag">Claude Code</span><span class="tag">Codex</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3><span data-l="ko">학부 과정</span><span data-l="en">Academic</span></h3>
+        <div class="tags">
+          <span class="tag">Verilog</span><span class="tag">C</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3><span data-l="ko">어학</span><span data-l="en">Languages</span></h3>
+        <div class="tags">
+          <span class="tag" data-l="ko">한국어 (모국어)</span><span class="tag" data-l="en">Korean (Native)</span>
+          <span class="tag" data-l="ko">영어 (미국 학사 취득)</span><span class="tag" data-l="en">English (U.S. Bachelor's Degree)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2><span data-l="ko">연락</span><span data-l="en">Contact</span></h2>
+    <div class="contact">
+      <span class="email" id="email">johannchoi2002@gmail.com</span>
+      <button type="button" class="copy" id="copy-email">
+        <span data-l="ko">이메일 복사</span><span data-l="en">Copy email</span>
+      </button>
+    </div>
+    <p class="note" data-l="ko">이력서 PDF는 페이지 상단에서 받을 수 있습니다. 프로젝트 상세 자료는 이메일로 요청해 주세요.</p>
+    <p class="note" data-l="en">Download the résumé PDF at the top of this page. Detailed project materials are available by email.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">YOHAN CHOI · HW ENGINEER · REV. 2026.10</div>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  var app = document.getElementById('app');
+  var buttons = document.querySelectorAll('.lang button');
+
+  function setLang(lang) {
+    app.dataset.lang = lang;
+    document.documentElement.lang = lang;
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === lang)); });
+    try { localStorage.setItem('resume-lang', lang); } catch (e) {}
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem('resume-lang'); } catch (e) {}
+  setLang(saved === 'en' ? 'en' : 'ko');
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.dataset.set); });
+  });
+
+  // Open a project when its anchor is linked directly (e.g. #trinity)
+  function openFromHash() {
+    var el = location.hash && document.getElementById(location.hash.slice(1));
+    if (el && el.tagName === 'DETAILS') el.open = true;
+  }
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
+
+  var copyBtn = document.getElementById('copy-email');
+  copyBtn.addEventListener('click', function () {
+    var email = document.getElementById('email');
+    var label = app.dataset.lang === 'en' ? 'Copied' : '복사됨';
+    function done() {
+      var original = copyBtn.innerHTML;
+      copyBtn.textContent = label;
+      setTimeout(function () { copyBtn.innerHTML = original; }, 1500);
+    }
+    function selectText() {
+      var range = document.createRange();
+      range.selectNodeContents(email);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email.textContent).then(done, selectText);
+    } else {
+      selectText();
+    }
+  });
+})();
+</script>
