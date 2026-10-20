@@ -152,6 +152,7 @@ details[open] .p-name::before { content: "\2212"; }
 }
 .copy:hover { background: var(--accent-soft); }
 .downloads { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.downloads + .downloads { margin-top: 8px; }
 a.copy { display: inline-block; text-decoration: none; }
 .note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
 
@@ -204,6 +205,8 @@ html { scroll-behavior: smooth; }
       <a class="copy" href="Yohan_Choi_Career_KO.pdf" download>
         <span data-l="ko">↓ 경력기술서 PDF (국문)</span><span data-l="en">↓ Career Description PDF (Korean)</span>
       </a>
+    </div>
+    <div class="downloads">
       <a class="copy" href="Yohan_Choi_Resume_EN.pdf" download>
         <span data-l="ko">↓ 이력서 PDF (영문)</span><span data-l="en">↓ Résumé PDF (English)</span>
       </a>
